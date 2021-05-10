@@ -20,8 +20,8 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-table striped hover :items="getResult(resultFinded)"></b-table>
-      <b-col> {{ resultFinded }} </b-col>
+      <!-- <b-table striped hover :items="getResult(resultFinded)"></b-table> -->
+      <b-col> {{ getResult(resultFinded) }} </b-col>
     </b-row>
   </b-container>
 </template>
@@ -42,11 +42,11 @@ export default Vue.extend({
     this.isServiceOn()
   },
   methods: {
-    getResult(results: Array<Object>) {
-      if (results === undefined || results === null) {
+    getResult(res: Array<Object>): any {
+      if (res === undefined || res === null) {
         return []
       }
-      return results.results
+      return res
     },
     search(url: String) {
       this.$axios
