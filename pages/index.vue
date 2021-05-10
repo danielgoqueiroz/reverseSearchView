@@ -1,65 +1,75 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">reverseSearchView</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
-  </div>
+  <b-container>
+    <b-row>
+      <b-col>
+        <div class="container">
+          <b-input-group prepend="Url">
+            <b-form-input
+              v-model="link"
+              placeholder="Digite o endereço da imagem"
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button
+                :varian="isOn ? 'success' : 'secondary'"
+                @click="search(link)"
+                >Buscar</b-button
+              >
+            </b-input-group-append>
+          </b-input-group>
+        </div>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-table striped hover :items="getResult(resultFinded)"></b-table>
+      <b-col> {{ resultFinded }} </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 
-export default Vue.extend({})
+export default Vue.extend({
+  data() {
+    return {
+      link: 'https://amazonas.news/wp-content/uploads/2021/04/image.jpg',
+      isOn: false,
+      teste: {},
+      resultFinded: {},
+    }
+  },
+  mounted() {
+    this.isServiceOn()
+  },
+  methods: {
+    getResult(results: Array<Object>) {
+      if (results === undefined || results === null) {
+        return []
+      }
+      return results.results
+    },
+    search(url: String) {
+      this.$axios
+        .get(`http://phantomcode.ddns.net/reverseSearch?url=${url}`)
+        .then((result) => {
+          this.resultFinded = result.data
+        })
+        .catch(() => {
+          this.isOn = false
+        })
+    },
+    isServiceOn() {
+      this.$axios
+        .get('http://phantomcode.ddns.net/')
+        .then((result) => {
+          this.isOn = result.status === 200
+        })
+        .catch(() => {
+          this.isOn = false
+        })
+    },
+  },
+})
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
+<style></style>
