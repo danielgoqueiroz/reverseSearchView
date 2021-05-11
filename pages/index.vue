@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <b-input-group prepend="Url">
+    <b-input-group prepend="Url" class="pt-5">
       <b-form-input
         v-model="link"
         placeholder="Digite o endereço da imagem"
@@ -40,31 +40,31 @@ export default Vue.extend({
       link: '',
       isOn: false,
       resultFinded: [
-        {
-          host: 'www.youtube.com',
-          link: 'https://www.youtube.com/watch?v=0dIDLWt1fo0',
-          text: '1 de jan. de 2021 — O presidente Jair Bolsonaro (sem partido) nadou com banhistas de Praia Grande (SP), causando enorme aglomeração na água, nesta ...',
-        },
-        {
-          host: 'www1.folha.uol.com.br',
-          link: 'https://www1.folha.uol.com.br/poder/2021/01/bolsonaro-repete-tour-na-praia-grande-em-sp-e-ignora-pandemia-da-covid-em-contato-com-banhistas.shtml',
-          text: '4 de jan. de 2021 — Gilmar Alves Jr. Praia Grande (SP). O presidente Jair Bolsonaro (sem partido) repetiu nesta segunda-feira (4), último ...',
-        },
-        {
-          host: 'revistaforum.com.br',
-          link: 'https://revistaforum.com.br/brasil/bolsonaro-se-despede-do-litoral-de-sp-com-nova-aglomeracao-em-praia-grande/',
-          text: '780 × 640 · 4 de jan. de 2021 — O presidente resolveu fazer um passeio na praia do Canto do Forte, em Praia Grande. Como sempre, estava sem máscara e ignorou, novamente ...',
-        },
-        {
-          host: 'www.santaportal.com.br',
-          link: 'https://www.santaportal.com.br/noticia/68793-jair-bolsonaro-e-visto-andando-de-jet-ski-e-conversando-com-eleitores-em-praia-grande',
-          text: '780 × 640 · 4 de jan. de 2021 — Durante a semana, Bolsonaro também aproveitou para fazer passeios pela região. Na sexta-feira (1º), ele passeou de lancha em Praia Grande e ...',
-        },
-        {
-          host: 'costanorte.com.br',
-          link: 'https://costanorte.com.br/nacional/brasil-est%C3%A1-quebrado-e-eu-n%C3%A3o-consigo-fazer-nada-diz-bolsonaro-contrariando-otimismo-de-guedes-1.263598',
-          text: '1000 × 500 · 5 de jan. de 2021 — Bolsonaro em férias na Baixada Santita / Foto: Reprodução / Praia Grande Mil Grau. O presidente Jair Bolsonaro declarou a um grupo de ...',
-        },
+        // {
+        //   host: 'www.youtube.com',
+        //   link: 'https://www.youtube.com/watch?v=0dIDLWt1fo0',
+        //   text: '1 de jan. de 2021 — O presidente Jair Bolsonaro (sem partido) nadou com banhistas de Praia Grande (SP), causando enorme aglomeração na água, nesta ...',
+        // },
+        // {
+        //   host: 'www1.folha.uol.com.br',
+        //   link: 'https://www1.folha.uol.com.br/poder/2021/01/bolsonaro-repete-tour-na-praia-grande-em-sp-e-ignora-pandemia-da-covid-em-contato-com-banhistas.shtml',
+        //   text: '4 de jan. de 2021 — Gilmar Alves Jr. Praia Grande (SP). O presidente Jair Bolsonaro (sem partido) repetiu nesta segunda-feira (4), último ...',
+        // },
+        // {
+        //   host: 'revistaforum.com.br',
+        //   link: 'https://revistaforum.com.br/brasil/bolsonaro-se-despede-do-litoral-de-sp-com-nova-aglomeracao-em-praia-grande/',
+        //   text: '780 × 640 · 4 de jan. de 2021 — O presidente resolveu fazer um passeio na praia do Canto do Forte, em Praia Grande. Como sempre, estava sem máscara e ignorou, novamente ...',
+        // },
+        // {
+        //   host: 'www.santaportal.com.br',
+        //   link: 'https://www.santaportal.com.br/noticia/68793-jair-bolsonaro-e-visto-andando-de-jet-ski-e-conversando-com-eleitores-em-praia-grande',
+        //   text: '780 × 640 · 4 de jan. de 2021 — Durante a semana, Bolsonaro também aproveitou para fazer passeios pela região. Na sexta-feira (1º), ele passeou de lancha em Praia Grande e ...',
+        // },
+        // {
+        //   host: 'costanorte.com.br',
+        //   link: 'https://costanorte.com.br/nacional/brasil-est%C3%A1-quebrado-e-eu-n%C3%A3o-consigo-fazer-nada-diz-bolsonaro-contrariando-otimismo-de-guedes-1.263598',
+        //   text: '1000 × 500 · 5 de jan. de 2021 — Bolsonaro em férias na Baixada Santita / Foto: Reprodução / Praia Grande Mil Grau. O presidente Jair Bolsonaro declarou a um grupo de ...',
+        // },
       ],
     }
   },
@@ -78,19 +78,24 @@ export default Vue.extend({
       }
       return res
     },
-    search(url: String) {
-      this.$axios
-        .get(`http://phantomcode.ddns.net/reverseSearch?url=${url}`)
-        .then((result) => {
-          // const resultGrouped = _.groupBy(result.data.results, (r) => {
-          //   return r.host
-          // })
+    search(url: string) {
+      try {
+        const link = new URL(url)
+        this.$axios
+          .get(`http://phantomcode.ddns.net/reverseSearch?url=${link}`)
+          .then((result) => {
+            // const resultGrouped = _.groupBy(result.data.results, (r) => {
+            //   return r.host
+            // })
 
-          this.resultFinded = result.data.results
-        })
-        .catch(() => {
-          this.isOn = false
-        })
+            this.resultFinded = result.data.results
+          })
+          .catch(() => {
+            this.isOn = false
+          })
+      } catch (err) {
+        console.log('O link parece inválido')
+      }
     },
     isServiceOn() {
       this.$axios
