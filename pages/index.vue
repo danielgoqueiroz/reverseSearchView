@@ -20,8 +20,7 @@
       </b-col>
     </b-row>
     <b-row>
-      <!-- <b-table striped hover :items="getResult(resultFinded)"></b-table> -->
-      <b-col> {{ getResult(resultFinded) }} </b-col>
+      <b-table striped hover :items="resultFinded"></b-table>
     </b-row>
   </b-container>
 </template>
@@ -32,7 +31,8 @@ import Vue from 'vue'
 export default Vue.extend({
   data() {
     return {
-      link: 'https://amazonas.news/wp-content/uploads/2021/04/image.jpg',
+      // link: 'https://amazonas.news/wp-content/uploads/2021/04/image.jpg',
+      link: '',
       isOn: false,
       teste: {},
       resultFinded: {},
@@ -52,7 +52,11 @@ export default Vue.extend({
       this.$axios
         .get(`http://phantomcode.ddns.net/reverseSearch?url=${url}`)
         .then((result) => {
-          this.resultFinded = result.data
+          // const resultGrouped = _.groupBy(result.data.results, (r) => {
+          //   return r.host
+          // })
+
+          this.resultFinded = result.data.results
         })
         .catch(() => {
           this.isOn = false
