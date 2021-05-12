@@ -1,6 +1,16 @@
 <template>
   <b-container>
-    <b-input-group prepend="Url" class="pt-5">
+    <b-input-group class="pt-5">
+      <b-input-group-prepend>
+        <b-input-group-text>
+          <b-img
+            height="20px"
+            v-if="link !== undefined && link.length > 0"
+            :src="link"
+          />
+          <div v-else>Url</div>
+        </b-input-group-text>
+      </b-input-group-prepend>
       <b-form-input
         v-model="link"
         placeholder="Digite o endereço da imagem"
@@ -33,7 +43,12 @@
         </div>
         <!-- {{ resultAgrouped[key] }} -->
         <b-list-group-item v-for="item in resultAgrouped[key]" :key="item.link">
-          <a :href="item.link">{{ item.link }}</a> <br />
+          <b-row>
+            <b-col col lg="2"><b-img :src="item.preview" /></b-col>
+            <b-col cols="10"
+              ><a :href="item.link">{{ item.link }}</a> <br
+            /></b-col>
+          </b-row>
         </b-list-group-item>
 
         <!-- <small class="text-muted">{{ result.index }}</small> -->
@@ -49,7 +64,7 @@ export default Vue.extend({
   name: 'App',
   data() {
     return {
-      // link: 'https://amazonas.news/wp-content/uploads/2021/04/image.jpg',
+      // link: 'https://img.r7.com/images/bolsonaro-passeia-de-moto-com-centenas-de-apoiadores-09052021134454757?dimensions=442x241',
       link: '',
       isOn: false,
       resultFinded: [],
