@@ -1,15 +1,23 @@
 <template>
-  <b-container>
+  <b-container fluid class="content">
+    <b-row cols="3">
+      <b-col></b-col>
+      <b-col
+        ><b-img
+          thumbnail
+          fluid
+          rounded
+          :v-if="validateLink(link) != ''"
+          class="image-preview"
+          height="250px"
+          :src="validateLink(link)"
+      /></b-col>
+      <b-col></b-col>
+    </b-row>
+
     <b-input-group class="pt-5">
       <b-input-group-prepend>
-        <b-input-group-text>
-          <b-img
-            v-if="link !== undefined && link.length > 0"
-            height="20px"
-            :src="link"
-          />
-          <div v-else>Url</div>
-        </b-input-group-text>
+        <b-input-group-text> Url </b-input-group-text>
       </b-input-group-prepend>
       <b-form-input
         v-model="link"
@@ -33,31 +41,37 @@
         >
       </b-input-group-append>
     </b-input-group>
-    <b-list-group>
-      <b-list-group-item
-        v-for="key in Object.getOwnPropertyNames(resultAgrouped)"
-        :key="key.index"
-        class="flex-column align-items-start"
-      >
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">{{ key }}</h5>
-          <medium class="text-muted"
-            ><b-badge>{{ resultAgrouped[key].length }} </b-badge></medium
-          >
-        </div>
-        <!-- {{ resultAgrouped[key] }} -->
-        <b-list-group-item v-for="item in resultAgrouped[key]" :key="item.link">
-          <b-row>
-            <b-col col lg="2"><b-img :src="item.preview" /></b-col>
-            <b-col cols="10"
-              ><a :href="item.link" target="_blank">{{ item.link }}</a> <br
-            /></b-col>
-          </b-row>
-        </b-list-group-item>
 
-        <!-- <small class="text-muted">{{ result.index }}</small> -->
-      </b-list-group-item>
-    </b-list-group>
+    <b-col>
+      <b-list-group>
+        <b-list-group-item
+          v-for="key in Object.getOwnPropertyNames(resultAgrouped)"
+          :key="key.index"
+          class="flex-column align-items-start"
+        >
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ key }}</h5>
+            <medium class="text-muted"
+              ><b-badge>{{ resultAgrouped[key].length }} </b-badge></medium
+            >
+          </div>
+          <!-- {{ resultAgrouped[key] }} -->
+          <b-list-group-item
+            v-for="item in resultAgrouped[key]"
+            :key="item.link"
+          >
+            <b-row>
+              <b-col col lg="2"><b-img :src="item.preview" /></b-col>
+              <b-col cols="10"
+                ><a :href="item.link" target="_blank">{{ item.link }}</a> <br
+              /></b-col>
+            </b-row>
+          </b-list-group-item>
+
+          <!-- <small class="text-muted">{{ result.index }}</small> -->
+        </b-list-group-item>
+      </b-list-group>
+    </b-col>
   </b-container>
 </template>
 
@@ -85,6 +99,24 @@ export default Vue.extend({
     this.isServiceOn()
   },
   methods: {
+    validateLink(link: string): any {
+      try {
+        const url = new URL(link)
+        this.$axios
+          .get(link)
+          .then((result: any) => {
+            if (result) {
+              return link
+            }
+          })
+          .catch(() => {
+            return ''
+          })
+        return url.toString()
+      } catch (err) {
+        return ''
+      }
+    },
     downloadCSV() {
       console.log('csv')
     },
@@ -134,4 +166,15 @@ export default Vue.extend({
 })
 </script>
 
-<style></style>
+<style>
+.image-preview {
+  text-align: center;
+}
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 50px;
+}
+</style>

@@ -1,7 +1,5 @@
 <template>
-  <b-container>
-    <Search />
-  </b-container>
+  <b-container> </b-container>
 </template>
 
 <script lang="ts">
