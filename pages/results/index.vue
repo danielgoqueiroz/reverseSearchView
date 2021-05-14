@@ -8,7 +8,11 @@
           </b-col>
           <b-col>
             <b-button-group>
-              <b-button>CSV</b-button>
+              <b-button
+                :href="getCsvLink(result.link)"
+                :alt="getCsvLink(result.link)"
+                >CSV</b-button
+              >
               <b-button>APAGAR</b-button>
               <b-button>Detalhes</b-button>
             </b-button-group>
@@ -21,6 +25,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+const crypto = require('crypto')
 
 export default Vue.extend({
   name: 'Search',
@@ -35,6 +40,14 @@ export default Vue.extend({
     this.getResults()
   },
   methods: {
+    getHash(text: string): string {
+      return crypto.createHash('md5').update(text).digest('hex')
+    },
+    getCsvLink(link: string) {
+      return `http://phantomcode.ddns.net/api/resources/csv/${this.getHash(
+        link
+      )}.csv`
+    },
     getResults() {
       this.$axios
         .get('http://phantomcode.ddns.net/reverseSearch/results')
