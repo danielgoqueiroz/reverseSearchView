@@ -11,9 +11,8 @@
               <b-button
                 :href="getCsvLink(result.link)"
                 :alt="getCsvLink(result.link)"
-                >CSV</b-button
-              >
-              <b-button>APAGAR</b-button>
+                >CSV</b-button>
+              <b-button @click="remove(result.hash)">APAGAR</b-button>
               <b-button>Detalhes</b-button>
             </b-button-group>
           </b-col>
@@ -40,6 +39,21 @@ export default Vue.extend({
     this.getResults()
   },
   methods: {
+    remove(hash: string) {
+
+    },
+    jsontoCsv(json: string) {
+
+      // let csvContent = "";
+      // json.forEach((item) => {
+      //   let line = `${item.host};${item.link};${item.text}\n`;
+      //   csvContent += line;
+      // });
+      // fs.writeFile(csvPath, csvContent, "utf-8", function (err) {
+      //   if (err) throw err;
+      //   console.log(`Json salvo: ${csvPath}`);
+      // });
+    },
     getHash(text: string): string {
       return crypto.createHash('md5').update(text).digest('hex')
     },
