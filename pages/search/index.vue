@@ -43,34 +43,7 @@
     </b-input-group>
 
     <b-col>
-      <b-list-group>
-        <b-list-group-item
-          v-for="key in Object.getOwnPropertyNames(resultAgrouped)"
-          :key="key.index"
-          class="flex-column align-items-start"
-        >
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ key }}</h5>
-            <medium class="text-muted"
-              ><b-badge>{{ resultAgrouped[key].length }} </b-badge></medium
-            >
-          </div>
-          <!-- {{ resultAgrouped[key] }} -->
-          <b-list-group-item
-            v-for="item in resultAgrouped[key]"
-            :key="item.link"
-          >
-            <b-row>
-              <b-col col lg="2"><b-img :src="item.preview" /></b-col>
-              <b-col cols="10"
-                ><a :href="item.link" target="_blank">{{ item.link }}</a> <br
-              /></b-col>
-            </b-row>
-          </b-list-group-item>
-
-          <!-- <small class="text-muted">{{ result.index }}</small> -->
-        </b-list-group-item>
-      </b-list-group>
+      <Result :results="resultFinded" />
     </b-col>
   </b-container>
 </template>
@@ -89,12 +62,7 @@ export default Vue.extend({
       loading: false,
     }
   },
-  computed: {
-    resultAgrouped(): any {
-      const results = this.groupBy(this.resultFinded, 'host')
-      return results
-    },
-  },
+  computed: {},
   mounted() {
     this.isServiceOn()
   },
@@ -119,12 +87,6 @@ export default Vue.extend({
     },
     downloadCSV() {
       console.log('csv')
-    },
-    groupBy(list: any, key: any) {
-      return list.reduce(function (rv: any, x: any) {
-        ;(rv[x[key]] = rv[x[key]] || []).push(x)
-        return rv
-      }, {})
     },
     getResult(res: Array<Object>): any {
       if (res === undefined || res === null) {

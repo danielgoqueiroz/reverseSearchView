@@ -11,10 +11,14 @@
               <b-button
                 :href="getCsvLink(result.link)"
                 :alt="getCsvLink(result.link)"
-                >CSV</b-button>
+                >CSV</b-button
+              >
               <b-button @click="remove(result.hash)">APAGAR</b-button>
-              <b-button>Detalhes</b-button>
+              <b-button @click="showModal(result)"> Detalhes </b-button>
             </b-button-group>
+            <b-modal v-model="modalShow" title="Resultados">
+              <Result :results="resultModal" />
+            </b-modal>
           </b-col>
         </b-row>
       </b-list-group-item>
@@ -24,13 +28,17 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import Result from '~/components/Result.vue'
 const crypto = require('crypto')
 
 export default Vue.extend({
   name: 'Search',
+  components: { Result },
   data() {
     return {
       results: [],
+      resultModal: [],
+      modalShow: false,
       loading: false,
     }
   },
@@ -39,11 +47,32 @@ export default Vue.extend({
     this.getResults()
   },
   methods: {
+    showModal(results: any) {
+      console.log(results)
+      this.resultModal = results.results
+      this.modalShow = true
+    },
+    groupBy(list: any, key: any) {
+      return list.reduce(function (rv: any, x: any) {
+        ;(rv[x[key]] = rv[x[key]] || []).push(x)
+        return rv
+      }, {})
+    },
     remove(hash: string) {
-
+      this.$axios
+        .delete(`http://phantomcode.ddns.net/reverseSearch/result?hash=${hash}`)
+        .then((result) => {
+          if (result.status === 201) {
+            this.getResults()
+            console.log('Item removido')
+          }
+        })
+        .catch((err) => {
+          console.log('Erro ao remover: ' + err)
+        })
     },
     jsontoCsv(json: string) {
-
+      console.log(json)
       // let csvContent = "";
       // json.forEach((item) => {
       //   let line = `${item.host};${item.link};${item.text}\n`;
