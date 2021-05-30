@@ -1,4 +1,5 @@
-/* eslint-disable no-console */ /* eslint-disable no-console */
+/* eslint-disable no-console */ /* eslint-disable no-console */ /*
+eslint-disable no-console */
 <template>
   <b-container flex>
     <b-list-group>
@@ -12,9 +13,9 @@
               <b-button variant="info" @click="downlodCsv(result)"
                 ><b-icon-arrow-down
               /></b-button>
-              <b-button variant="success" @click="sendCsvToEmail(result)"
+              <!-- <b-button variant="success" @click="sendCsvToEmail(result)"
                 ><b-icon-cloud-arrow-up-fill
-              /></b-button>
+              /></b-button> -->
               <b-button variant="primary" @click="showModal(result)">
                 <b-icon-info-circle />
               </b-button>
@@ -112,7 +113,9 @@ export default Vue.extend({
           link.click()
           URL.revokeObjectURL(link.href)
         })
-        .catch(console.error)
+        .catch(() => {
+          console.error('Erro ao baixar aquivo')
+        })
     },
     getHash(text: string): string {
       return crypto.createHash('md5').update(text).digest('hex')
