@@ -9,6 +9,9 @@
           </b-col>
           <b-col>
             <b-button-group>
+              <b-button variant="info" @click="downlodCsv(result)"
+                ><b-icon-arrow-down
+              /></b-button>
               <b-button variant="success" @click="sendCsvToEmail(result)"
                 ><b-icon-cloud-arrow-up-fill
               /></b-button>
@@ -114,10 +117,13 @@ export default Vue.extend({
     getHash(text: string): string {
       return crypto.createHash('md5').update(text).digest('hex')
     },
-    sendCsvToEmail(result: any) {
-      this.$axios.get(
+    async sendCsvToEmail(result: any) {
+      console.info(`Enviando csv ${result.hash}.csv para ${result.email}.`)
+      await this.$axios.get(
         `http://phantomcode.ddns.net/reverseSearch/result/send?email=${this.email}&hash=${result.hash}`
       )
+    },
+    downlodCsv(result: any) {
       this.jsontoCsv(result.hash, result.results)
     },
     getResults(): any {
