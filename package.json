@@ -18,7 +18,7 @@
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.9.1",
     "js-file-download": "^0.4.12",
-    "nuxt": "^2.15.3"
+    "nuxt": "^2.15.6"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.3",
