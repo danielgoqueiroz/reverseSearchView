@@ -10,7 +10,9 @@ eslint-disable no-console */
           </b-col>
           <b-col>
             <b-button-group>
-              <b-button variant="info" @click="downlodCsv(result)"
+              <b-button
+                variant="info"
+                @click="downlodCsv(result.results, result.hash)"
                 ><b-icon-arrow-down
               /></b-button>
               <!-- <b-button variant="success" @click="sendCsvToEmail(result)"
@@ -37,6 +39,7 @@ eslint-disable no-console */
 import Vue from 'vue'
 import Result from '~/components/Result.vue'
 const crypto = require('crypto')
+const FileDownload = require('js-file-download')
 
 export default Vue.extend({
   name: 'Search',
@@ -94,29 +97,29 @@ export default Vue.extend({
         return 0
       }
     },
-    jsontoCsv(name: string, json: any) {
-      const orderedItens = json.sort(this.sortByProperty('link'))
+    // jsontoCsv(name: string, json: any) {
+    // const orderedItens = json.sort(this.sortByProperty('link'))
 
-      let csvContent = 'Site,Link, \r\n'
+    // let csvContent = 'Site,Link, \r\n'
 
-      orderedItens.forEach((item: any) => {
-        const line = `${item.host},${item.link}\r\n`
-        csvContent += line
-      })
-      this.$axios
-        .get('', { responseType: 'blob' })
-        .then(() => {
-          const blob = new Blob([csvContent], { type: 'text/csv' })
-          const link = document.createElement('a')
-          link.href = URL.createObjectURL(blob)
-          link.download = `${name}.csv`
-          link.click()
-          URL.revokeObjectURL(link.href)
-        })
-        .catch(() => {
-          console.error('Erro ao baixar aquivo')
-        })
-    },
+    // orderedItens.forEach((item: any) => {
+    //   const line = `${item.host},${item.link}\r\n`
+    //   csvContent += line
+    // })
+    // this.$axios
+    //   .get('', { responseType: 'blob' })
+    //   .then(() => {
+    //     const blob = new Blob([csvContent], { type: 'text/csv' })
+    //     const link = document.createElement('a')
+    //     link.href = URL.createObjectURL(blob)
+    //     link.download = `${name}.csv`
+    //     link.click()
+    //     URL.revokeObjectURL(link.href)
+    //   })
+    //   .catch(() => {
+    //     console.error('Erro ao baixar aquivo')
+    //   })
+    // },
     getHash(text: string): string {
       return crypto.createHash('md5').update(text).digest('hex')
     },
@@ -126,8 +129,16 @@ export default Vue.extend({
         `http://phantomcode.ddns.net/reverseSearch/result/send?email=${this.email}&hash=${result.hash}`
       )
     },
-    downlodCsv(result: any) {
-      this.jsontoCsv(result.hash, result.results)
+    downlodCsv(json: any, hash: any) {
+      const orderedItens = json.sort(this.sortByProperty('link'))
+
+      let csvContent = 'Site,Link, \r\n'
+
+      orderedItens.forEach((item: any) => {
+        const line = `${item.host},${item.link}\r\n`
+        csvContent += line
+      })
+      FileDownload(csvContent, `${hash}.csv`)
     },
     getResults(): any {
       if (this.email === '') {
