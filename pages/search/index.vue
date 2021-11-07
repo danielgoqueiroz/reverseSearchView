@@ -131,7 +131,7 @@ export default Vue.extend({
         // this.loading = true
         await this.$axios
           .get(
-            `http://phantomcode.ddns.net/reverseSearch/search?url=${link}&email=${this.email}`
+            `https://reverse-search-api.herokuapp.com/reverseSearch/search?url=${link}&email=${this.email}`
           )
           .then((result) => {
             // this.loading = true
@@ -148,7 +148,7 @@ export default Vue.extend({
     },
     isServiceOn() {
       this.$axios
-        .get('http://phantomcode.ddns.net/')
+        .get('https://reverse-search-api.herokuapp.com')
         .then((result) => {
           this.isOn = result.status === 200
         })
